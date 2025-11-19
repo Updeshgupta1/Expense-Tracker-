@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Expense Tracker — Premium</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+  <!-- Icons (material) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">💸</div>
+        <div>
+          <h1>Spendly</h1>
+          <p class="muted">Expense Tracker</p>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav-btn active" data-section="dashboard"><span class="material-icons">dashboard</span>Dashboard</button>
+        <button class="nav-btn" data-section="add"><span class="material-icons">add_circle</span>Add</button>
+        <button class="nav-btn" data-section="reports"><span class="material-icons">bar_chart</span>Reports</button>
+        <button class="nav-btn" data-section="settings"><span class="material-icons">settings</span>Settings</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="theme-switch">
+          <button id="theme-toggle" title="Toggle theme">🌙</button>
+        </div>
+        <small class="muted">Made with ❤️ — Offline</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="search-wrap">
+          <input id="search" placeholder="Search expenses, e.g. coffee" />
+          <span class="material-icons search-icon">search</span>
+        </div>
+
+        <div class="top-actions">
+          <input id="import-csv" type="file" accept=".csv" style="display:none" />
+          <button id="import-btn" class="btn ghost">Import CSV</button>
+          <button id="export-btn" class="btn outline">Export CSV</button>
+        </div>
+      </header>
+
+      <!-- Dashboard -->
+      <section id="dashboard" class="page active">
+        <div class="grid">
+          <div class="card glass stats">
+            <h3>Balance</h3>
+            <div class="big" id="balance">₹0</div>
+            <div class="subgrid">
+              <div>
+                <small>Income</small>
+                <div class="stat" id="income">₹0</div>
+              </div>
+              <div>
+                <small>Expenses</small>
+                <div class="stat" id="expense-total">₹0</div>
+              </div>
+            </div>
+
+            <div class="budget-row">
+              <input id="budget" type="number" placeholder="Set monthly budget (₹)" />
+              <button id="set-budget" class="btn small">Set</button>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress" id="budget-progress"><div class="progress-bar"></div></div>
+              <small class="muted" id="budget-text">No budget set</small>
+            </div>
+          </div>
+
+          <div class="card glass chart-card">
+            <h3>Spending by Category</h3>
+            <canvas id="categoryChart"></canvas>
+          </div>
+
+          <div class="card glass add-quick">
+            <h3>Quick Add</h3>
+            <div class="quick-grid">
+              <input id="q-title" placeholder="Title (eg: Coffee)" />
+              <input id="q-amount" type="number" placeholder="Amount" />
+              <select id="q-category">
+                <option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Other</option>
+              </select>
+              <button id="quick-add" class="btn primary">Add</button>
+            </div>
+          </div>
+
+          <div class="card glass list-card full">
+            <div class="list-header">
+              <h3>Recent Expenses</h3>
+              <div>
+                <select id="filter-category">
+                  <option value="all">All Categories</option>
+                  <option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Other</option>
+                </select>
+                <select id="sort-by">
+                  <option value="date_desc">Newest</option>
+                  <option value="date_asc">Oldest</option>
+                  <option value="amount_desc">Amount ↓</option>
+                  <option value="amount_asc">Amount ↑</option>
+                </select>
+              </div>
+            </div>
+
+            <ul id="expense-list" class="expense-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Add Page -->
+      <section id="add" class="page">
+        <div class="card glass form-card">
+          <h2>Add / Edit Expense</h2>
+          <form id="expense-form">
+            <div class="field">
+              <label>Title</label>
+              <input id="title" required />
+            </div>
+
+            <div class="field row">
+              <div class="col">
+                <label>Amount (₹)</label>
+                <input id="amount" type="number" required />
+              </div>
+              <div class="col">
+                <label>Date</label>
+                <input id="date" type="date" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Category</label>
+              <select id="category">
+                <option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Other</option>
+              </select>
+            </div>
+
+            <div class="row-actions">
+              <button type="submit" class="btn primary">Save Expense</button>
+              <button type="button" id="reset-form" class="btn outline">Reset</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Reports (placeholder) -->
+      <section id="reports" class="page">
+        <div class="card glass">
+          <h2>Monthly Report</h2>
+          <p class="muted">Overview by month (coming soon)</p>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section id="settings" class="page">
+        <div class="card glass">
+          <h2>Settings</h2>
+          <div class="field">
+            <label>Currency</label>
+            <select id="currency">
+              <option value="₹">₹ INR</option>
+              <option value="$">$ USD</option>
+              <option value="€">€ EUR</option>
+            </select>
+          </div>
+          <p class="muted">Data saved in your browser's localStorage.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
